@@ -11,5 +11,7 @@ use Illuminate\Support\Facades\Route;
 Route::get("/", [Url::class, "index"]);
 // Store An Url
 Route::post("/", [Url::class, "store"]);
+// Destroy An Url
+Route::delete("/", [Url::class, "destroy"]);
 // Use the Url Short Code To Redirect
 Route::get("/{code}", [Url::class, "redirect"]);

@@ -1,4 +1,6 @@
 <script>
+  import { Icon } from '@iconify/vue';
+
   export default {
     data() {
       return {
@@ -6,14 +8,31 @@
         urlList: []
       }
     },
+    components: { Icon },
     async mounted() {
-      const req = await fetch("http://127.0.0.1:8000/api/")
-
-      const res = await req.json()
-
-      if (res.ok) this.urlList = res.data
+      this.fetchData()
     },
     methods: {
+      async fetchData() {
+        const req = await fetch("http://127.0.0.1:8000/api/")
+
+        const res = await req.json()
+
+        if (res.ok) this.urlList = res.data
+      },
+      async destroyUrl(code) {
+        const req = await fetch("http://127.0.0.1:8000/api/", {
+          method: "DELETE",
+          headers: { 'Content-Type': 'application/json', },
+          body: JSON.stringify({code}),
+        })
+
+        const res = await req.json()
+
+        if (res?.message) alert(res.message)
+        if (res.ok) this.fetchData()
+
+      },
       async submit() {
         const url = this.url
         this.url = ''
@@ -27,7 +46,7 @@
         const res = await req.json()
 
         if (res?.message) alert(res.message)
-        
+        if (res.ok) this.fetchData()
       }
     },
   }
@@ -60,7 +79,12 @@
           <a :href="'http://127.0.0.1:8000/api/' + url.code" target="_blank" class="col-span-5 px-2 py-1.5 underline hover:text-emerald-500 transition-colors duration-300 line-clamp-1">
             http://127.0.0.1:8000/api/{{ url.code }}
           </a>
-          <span class="col-span-2 px-2 py-1.5">{{ url.visits_count }}</span>
+          <span class="col-span-1 px-2 py-1.5">{{ url.visits_count }}</span>
+          <form @submit.prevent="destroyUrl(url.code)" class="col-span-1 px-2 py-1.5">
+            <button type="submit" class="text-red-600 hover:opacity-75 hover:scale-110 active:scale-90 transition-all duration-300">
+              <Icon icon="carbon:trash-can" width="22px" />
+            </button>
+          </form>
         </div>
       </div>
       </div>

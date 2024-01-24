@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\Urls;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Routing\Exception\ResourceNotFoundException;
 
 class Url extends Controller
 {
@@ -48,9 +50,37 @@ class Url extends Controller
         return response(json_encode($response), 200);
     }
 
+    public function destroy(Request $request)
+    {
+        $validator = Validator::make($request->all(), ['code' => 'required']);
+
+        if ($validator->fails()) {
+            $response = ["ok" => false, "message" => "Invalid Code"];
+            return response(json_encode($response), 400);
+        }
+
+        $code = $request->input('code');
+
+        $url = Urls::where('code', $code)->first();
+
+        if (!$url)
+            throw new ResourceNotFoundException("Url Not Found");
+
+        $url->delete();
+
+        $response = ["ok" => true, "message" => "Url Deleted"];
+
+        return response(json_encode($response), 200);
+    }
+
     public function redirect($code)
     {
         $url = Urls::where('code', $code)->first();
+
+        if (!$url)
+            throw new ResourceNotFoundException("Url Not Found");
+
+        $url->increment('visits_count');
 
         return redirect($url->original_url);
     }
