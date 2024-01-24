@@ -12,4 +12,4 @@ Route::get("/", [Url::class, "index"]);
 // Store An Url
 Route::post("/", [Url::class, "store"]);
 // Use the Url Short Code To Redirect
-Route::post("/{code}", [Url::class, "redirect"]);
+Route::get("/{code}", [Url::class, "redirect"]);

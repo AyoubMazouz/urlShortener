@@ -1,0 +1,69 @@
+<script>
+  export default {
+    data() {
+      return {
+        url: '',
+        urlList: []
+      }
+    },
+    async mounted() {
+      const req = await fetch("http://127.0.0.1:8000/api/")
+
+      const res = await req.json()
+
+      if (res.ok) this.urlList = res.data
+    },
+    methods: {
+      async submit() {
+        const url = this.url
+        this.url = ''
+        
+        const req = await fetch("http://127.0.0.1:8000/api/", {
+          method: "POST",
+          headers: { 'Content-Type': 'application/json', },
+          body: JSON.stringify({url}),
+        })
+
+        const res = await req.json()
+
+        if (res?.message) alert(res.message)
+        
+      }
+    },
+  }
+
+</script>
+
+<template>
+  <div class="flex justify-center bg-gray-50 text-gray-800 h-[100vh]">
+    <div class="max-w-[1400px] w-full py-12 px-4">
+      <div class="">
+        <h1>Url Shortener</h1>
+        <form @submit.prevent="submit" class="flex gap-4 items-center">
+        <input type="url" name="url" required placeholder="Past Your Url Here..." v-model="url" class="w-full">
+        <button type="submit" class="">Shorten</button>
+        </form>
+      </div>
+
+    <div>
+
+    <div class="overflow-hidden rounded-lg shadow-lg mt-12">
+      <div class="grid grid-cols-12 gap-2 w-full border-b-2 border-emerald-800 py-2 bg-emerald-600 text-emerald-50">
+        <span class="col-span-5 px-2">Original Url</span>
+        <span class="col-span-5 px-2">Shortened Url</span>
+        <span class="col-span-2 px-2">Visits Count</span>
+      </div>
+        <div v-for="(url, index) in urlList" :class="{ 'bg-gray-100': index % 2 === 0}" class="grid grid-cols-12 gap-4 w-full" >
+          <a :href="url.original_url" target="_blank" class="col-span-5 px-2 py-1.5 underline hover:text-emerald-500 transition-colors duration-300 line-clamp-1">
+            {{ url.original_url }}
+          </a>
+          <a :href="'http://127.0.0.1:8000/api/' + url.code" target="_blank" class="col-span-5 px-2 py-1.5 underline hover:text-emerald-500 transition-colors duration-300 line-clamp-1">
+            http://127.0.0.1:8000/api/{{ url.code }}
+          </a>
+          <span class="col-span-2 px-2 py-1.5">{{ url.visits_count }}</span>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+</template>
