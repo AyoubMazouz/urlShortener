@@ -55,14 +55,15 @@
 
 <template>
   <div class="flex justify-center bg-gray-50 text-gray-800 h-[100vh]">
-    <div class="max-w-[1400px] w-full py-12 px-4">
-      <div class="">
-        <h1>Url Shortener</h1>
-        <form @submit.prevent="submit" class="flex gap-4 items-center">
-        <input type="url" name="url" required placeholder="Past Your Url Here..." v-model="url" class="w-full">
-        <button type="submit" class="">Shorten</button>
-        </form>
-      </div>
+    <div class="max-w-[1400px] w-full pb-24 pt-6 px-4">
+      
+      <h1 class="text-red-600 font-bold text-xl">URL Shortener</h1>
+      <h3 class="font-semibold mt-4">Challenge Number Two from FullStack Challenges SQUHR</h3>
+
+      <form @submit.prevent="submit" class="flex gap-4 items-center mt-12">
+        <input type="url" name="url" required placeholder="Past Your Url Here..." v-model="url" class="w-full focus:outline-none border-2 border-gray-400 focus:border-emerald-500 transition-all duration-300 px-2 py-2.5 rounded-lg shadow-lg">
+        <button type="submit" class="rounded-lg shadow-lg py-2.5 px-6 font-bold text-lg  hover:scale-110 active:scale-90 transition-all duration-300 border-2 border-emerald-800 bg-emerald-600 hover:text-emerald-600 text-emerald-50 hover:bg-transparent">Shorten</button>
+      </form>
 
     <div>
 
